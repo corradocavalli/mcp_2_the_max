@@ -1,0 +1,11 @@
+
+# Environment variables for local development, copy this file to .env and fill in the values
+AZURE_OPENAI_BASE_URL=
+AZURE_OPENAI_API_VERSION=
+AZURE_OPENAI_DEPLOYMENT_NAME=
+AZURE_OPENAI_API_KEY=
+ 
+
+# MCP Server URLs for langchain_agent demo
+TRIAGE_SERVER_URL=http://localhost:8000/mcp
+TRADER_SERVER_URL=http://localhost:9000/mcp

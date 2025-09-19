@@ -1,14 +1,19 @@
 import json
+import os
 
+from dotenv import load_dotenv
 from fastmcp import Context, FastMCP
 from fastmcp.server.auth.providers.azure import AzureProvider
 from fastmcp.server.dependencies import get_access_token
 
+# Load environment variables from .env file
+load_dotenv()
+
 # The AzureProvider handles Azure's token format and validation
 auth_provider = AzureProvider(
-    client_id="YOUR_AZURE_CLIENT_ID",  # Your Azure App Client ID
-    client_secret="YOUR_AZURE_CLIENT_SECRET",  # Your Azure App Client Secret
-    tenant_id="YOUR_AZURE_TENANT_ID",  # Your Azure Tenant ID (REQUIRED)
+    client_id=os.getenv("AZURE_CLIENT_ID"),  # Your Azure App Client ID
+    client_secret=os.getenv("AZURE_CLIENT_SECRET"),  # Your Azure App Client Secret
+    tenant_id=os.getenv("AZURE_TENANT_ID"),  # Your Azure Tenant ID (REQUIRED)
     base_url="http://localhost:8000",  # Must match your App registration
     required_scopes=[
         "User.Read",
