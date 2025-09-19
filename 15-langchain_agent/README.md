@@ -1,13 +1,17 @@
 # LangChain + FastMCP Stock Trading Agent
 
 This example demonstrates how to integrate FastMCP servers with LangChain to create an AI agent capable of stock trading operations.
+It is an evolution of the agentic_flow example, this time using an LLM to coordinate the tool invocation
 
 ## Overview
 
 The example consists of:
 - **Triage Server**: Handles initial order processing and routing
 - **Trader Server**: Executes buy/sell orders with user confirmation
-- **LangChain Client**: AI agent that orchestrates trading operations
+- **LangChain Client**: AI agent that orchestrates trading operations. 
+
+## Orchestration flow 
+![alt text](image.png)
 
 ## Prerequisites
 
@@ -65,7 +69,7 @@ Once the client is running, you can interact with the AI agent using natural lan
 ```
 👤 You: Buy 10 shares of MSFT
 👤 You: Sell 5 shares of AAPL
-👤 You: What is the value of Microsoft stocks?
+👤 You: What is the value of Microsoft stocks? (test with and without the STOCK_INFO flag set.)
 ```
 
 The agent will:
@@ -95,6 +99,11 @@ The example is configured to trade:
 - AAPL (Apple)
 
 Additional stocks can be added by modifying the server configurations.
+
+## Additional test
+Setting the variable `STOCK_INFO` of `trader_server` to true will add an additional tool that the client can use to 
+ask the LLM about stock details and notice how it will now call the tool without any redirection.
+The auto-discovery of new tools is not implemented, so you need to restart both server and client, can be a future improvement.
 
 ## Troubleshooting
 

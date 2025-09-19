@@ -1,10 +1,6 @@
-# Progress
-
-from dataclasses import dataclass
-
 from fastmcp import Context, FastMCP
 
-mcp = FastMCP("Elicitation Server")
+mcp = FastMCP("Logging Server")
 
 
 from fastmcp import Context, FastMCP
@@ -12,6 +8,7 @@ from fastmcp import Context, FastMCP
 mcp = FastMCP("LoggingDemo")
 
 
+# Tool with various logging levels (where are these logs visible?)
 @mcp.tool
 async def analyze_data(data: list[float], ctx: Context) -> dict:
     """Analyze numerical data with comprehensive logging."""

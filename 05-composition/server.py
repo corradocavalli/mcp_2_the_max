@@ -1,4 +1,4 @@
-# Combine multiple mcp server
+# Combine multiple mcp servers
 
 import asyncio
 
@@ -15,7 +15,7 @@ def get_stock(stock_id: str) -> dict:
     return {"id": stock_id, "value": 212.45}
 
 
-# Import subserver
+# Import weather subserver
 async def setup():
     await main_mcp.import_server(weather_mcp, prefix="weather")
 

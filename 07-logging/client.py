@@ -1,19 +1,18 @@
 import asyncio
 import logging
-import os
 
-import httpx
 from fastmcp import Client
 from fastmcp.client.logging import LogMessage
 from rich.console import Console
-
-os.system("clear")
 
 # Get a logger for the module where the client is used
 logger = logging.getLogger(__name__)
 
 # This mapping is useful for converting MCP level strings to Python's levels
 LOGGING_LEVEL_MAP = logging.getLevelNamesMapping()
+
+console = Console()
+console.clear()
 
 
 async def log_handler(message: LogMessage):
@@ -34,26 +33,14 @@ async def log_handler(message: LogMessage):
     )
 
 
-client = Client("http://localhost:8000/mcp", log_handler=log_handler)
-
-console = Console()
-
-
 async def main():
-    async with client:
+    # Create the client with the custom log handler that will collect logs from the server
+    async with Client("http://localhost:8000/mcp", log_handler=log_handler) as client:
 
-        all_tools = await client.list_tools()
-        console.print(all_tools, style="bold green")
-
-        # user info tool
-        # result = await client.call_tool("collect_user_info")
-        # console.print(result, style="bold blue")
-
-        # simple action
+        # Call the tool, generated logs will be forwarded to the log_handler
         result = await client.call_tool("analyze_data", {"data": [1, 2, 3, 4, 5]})
+        console.print("\nResponse from the tool:", style="bold blue")
         console.print(result, style="bold magenta")
 
-
-os.system("clear")
 
 asyncio.run(main())

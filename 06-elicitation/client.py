@@ -1,13 +1,12 @@
 import asyncio
-import os
 
-import httpx
 from fastmcp import Client
 from fastmcp.client.elicitation import ElicitResult
 from rich.console import Console
 from server import UserInfo  # Import the dataclass from the server file
 
-os.system("clear")
+console = Console()
+console.clear()
 
 
 async def elicitation_handler(message: str, response_type: type, params, context):
@@ -36,26 +35,20 @@ async def elicitation_handler(message: str, response_type: type, params, context
         return ElicitResult(action="cancel")
 
 
-client = Client("http://localhost:8000/mcp", elicitation_handler=elicitation_handler)
-
-console = Console()
-
-
 async def main():
-    async with client:
 
-        all_tools = await client.list_tools()
-        console.print(all_tools, style="bold green")
+    # Create the client with the elicitation handler that will be called on elicitation requests
+    async with Client(
+        "http://localhost:8000/mcp", elicitation_handler=elicitation_handler
+    ) as client:
 
         # user info tool
-        # result = await client.call_tool("collect_user_info")
-        # console.print(result, style="bold blue")
+        result = await client.call_tool("collect_user_info")
+        console.print(result, style="bold blue")
 
         # simple action
         result = await client.call_tool("accept_tool")
         console.print(result, style="bold magenta")
 
-
-os.system("clear")
 
 asyncio.run(main())

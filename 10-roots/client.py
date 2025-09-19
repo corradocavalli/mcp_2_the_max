@@ -1,32 +1,32 @@
 import asyncio
 import os
+from pathlib import Path
 
 from fastmcp import Client
 from fastmcp.client.roots import RequestContext
 from rich.console import Console
 
-os.system("clear")
+console = Console()
+console.clear()
+
+current_dir = Path(__file__).parent.absolute()
 
 
-# pass this to make roots dynamic
+# Root can also be provided through a callback to dynamically authorize them per request
 async def roots_callback(context: RequestContext) -> list[str]:
     console.print(f"Server requested roots (Request ID: {context.request_id})")
-    return ["file:////Users/corradocavalli/Dev/Hackathon/fastmcp20/10-roots"]
+    return [f"file://{current_dir}/roots"]
 
 
-# Define roots to be used by the client
-roots = ["file:///Users/corradocavalli/Dev/Hackathon/fastmcp20/10-roots"]
-client = Client("http://localhost:8000/mcp", roots=roots)
-
-console = Console()
+# Define roots to be used by the client - use current directory
+roots = [f"file://{current_dir}"]
 
 
 async def main():
-    async with client:
+    # Create the client specifying the roots the server can access
+    async with Client("http://localhost:8000/mcp", roots=roots) as client:
         result = await client.call_tool("read_file", {"filename": "poem.txt"})
         console.print(result, style="bold blue")
 
-
-os.system("clear")
 
 asyncio.run(main())

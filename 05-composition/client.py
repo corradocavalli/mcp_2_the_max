@@ -1,32 +1,28 @@
 import asyncio
-import os
 
 from fastmcp import Client
 from rich.console import Console
 
-os.system("clear")
-
-
-client = Client("http://localhost:8000/mcp")
-
 console = Console()
+console.clear()
 
 
-async def call_tool(name: str):
-    async with client:
-
+async def main():
+    async with Client("http://localhost:8000/mcp") as client:
+        # List all available tools, both servers combined
         all_tools = await client.list_tools()
         console.print(all_tools, style="bold green")
+        console.print("-" * 80, style="white")
 
+        # Call tools from main server
         result = await client.call_tool("get_stock", {"stock_id": "MSFT"})
         console.print(result, style="bold blue")
 
+        # Call tools from imported server, note how the tool name is prefixed with "weather" as indicated in server.py
         result = await client.call_tool(
             "weather_get_forecast", {"city": "London"}
         )  # weather is prefixed
         console.print(result, style="bold blue")
 
 
-os.system("clear")
-
-asyncio.run(call_tool("Ford"))
+asyncio.run(main())

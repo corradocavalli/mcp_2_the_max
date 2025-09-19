@@ -1,11 +1,10 @@
 import asyncio
-import logging
-import os
 
 from fastmcp import Client
 from rich.console import Console
 
-os.system("clear")
+console = Console()
+console.clear()
 
 
 async def my_progress_handler(
@@ -18,24 +17,18 @@ async def my_progress_handler(
         console.print(f"Progress: {progress} - {message or ''}")
 
 
-client = Client("http://localhost:8000/mcp", progress_handler=my_progress_handler)
-
-console = Console()
-
-
 async def main():
-    async with client:
-
-        all_tools = await client.list_tools()
-        console.print(all_tools, style="bold green")
+    # Create the client with the custom progress handler
+    async with Client(
+        "http://localhost:8000/mcp", progress_handler=my_progress_handler
+    ) as client:
 
         # simple action
+        console.print("Calling process_items tool...\n", style="bold green")
         result = await client.call_tool(
             "process_items", {"items": ["hi", "how", "are", "you", "?"]}
         )
         console.print(result, style="bold magenta")
 
-
-os.system("clear")
 
 asyncio.run(main())

@@ -1,4 +1,4 @@
-# Elicitation
+# Elicitation allows you to interactively gather information from users.
 
 from dataclasses import dataclass
 

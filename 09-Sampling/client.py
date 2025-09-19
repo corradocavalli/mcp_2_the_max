@@ -1,11 +1,11 @@
 import asyncio
-import os
 
 from fastmcp import Client
 from fastmcp.client.sampling import RequestContext, SamplingMessage, SamplingParams
 from rich.console import Console
 
-os.system("clear")
+console = Console()
+console.clear()
 
 
 async def sampling_handler(
@@ -13,10 +13,11 @@ async def sampling_handler(
     params: SamplingParams,
     context: RequestContext,
 ) -> str:
-
-    console.print("Received list of SamplingMessage objects:", style="bold yellow")
+    console.print("-" * 80, style="white")
+    console.print("\nReceived list of SamplingMessage objects:", style="bold cyan")
     console.print(messages, style="bold green")
     console.print(params, style="bold blue")
+    console.print("-" * 80, style="white")
 
     # Discriminate by message content, role, etc.
     for msg in messages:
@@ -29,19 +30,16 @@ async def sampling_handler(
     return "This is a sample response from the client's LLM."
 
 
-client = Client("http://localhost:8000/mcp", sampling_handler=sampling_handler)
-
-console = Console()
-
-
 async def main():
-    async with client:
+    # Create the client with the custom sampling handler
+    async with Client(
+        "http://localhost:8000/mcp", sampling_handler=sampling_handler
+    ) as client:
 
         # simple action
+        console.print("Calling creative_writing tool...", style="bold cyan")
         result = await client.call_tool("creative_writing", {"topic": "Switzerland"})
         console.print(result, style="bold magenta")
 
-
-os.system("clear")
 
 asyncio.run(main())

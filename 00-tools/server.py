@@ -9,7 +9,7 @@ from starlette.responses import PlainTextResponse
 from typing_extensions import Literal
 
 mcp = FastMCP(
-    name="My MCP Server",
+    name="Test MCP Server",
     include_tags={"dev", "catalog"},  # Only expose these tagged components
     exclude_tags={"internal", "deprecated"},  # Hide these tagged components
     on_duplicate_tools="error",  # Handle duplicate registrations
@@ -26,7 +26,7 @@ class Person:
     email: str
 
 
-# structured output
+# This tool uses structured output, which the LLM can parse more easily
 @mcp.tool(tags={"dev", "admin"})
 def get_user_profile(user_id: str) -> Person:
     """Get a user's profile information."""
@@ -61,8 +61,9 @@ def greet_v2(name: str) -> str:
     return f"Hello, DEV {name}!"
 
 
+# This tool is for internal use only, tagged as "internal"
 @mcp.tool(
-    tags={"dev", "admin"},
+    tags={"internal"},
     annotations={
         "title": "Get cpu usage",
         "readOnlyHint": True,
@@ -73,14 +74,14 @@ def cpu_usage() -> str:
     return "47%"
 
 
-# Tool with type hints for the LLM
+# Tool with type hints (description, parameters annotations, tags...) to help the LLM understand how to call it
 @mcp.tool(
     name="find_products",  # Custom tool name for the LLM
     description="Search the product catalog with optional category filtering.",  # Custom description
     tags={"catalog", "search"},  # Optional tags for organization/filtering
     meta={"version": "1.2", "author": "product-team"},  # Custom metadata
 )
-def search_products_implementation(
+def search_products(
     query: Annotated[str, Field(description="The user query")],
     category: Annotated[
         Literal["ai", "microsoft"] | None, Field(description="The desired category")
@@ -89,13 +90,7 @@ def search_products_implementation(
     list[dict], Field(description="A list of products matching the search criteria.")
 ]:
     print(f"Searching for '{query}' in category '{category}'")
-    return [{"id": 2, "name": "Another Product"}]
-
-
-# Custom route
-@mcp.custom_route("/health", methods=["GET"])
-async def health_check(request: Request) -> PlainTextResponse:
-    return PlainTextResponse("Server is OK")
+    return [{"id": 2, "name": "Garmin GPS", "category": "electronics"}]
 
 
 if __name__ == "__main__":

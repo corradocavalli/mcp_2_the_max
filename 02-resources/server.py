@@ -1,7 +1,5 @@
-# A Resource is data (read-only) for the LLM or client application.
+# A Resource is data (read-only) exposed by the server for the LLM or client application.
 
-
-import json
 
 from fastmcp import Context, FastMCP
 
@@ -12,7 +10,7 @@ mcp = FastMCP(name="DataServer")
 @mcp.resource("resource://greeting")
 def get_greeting() -> str:
     """Provides a simple greeting message."""
-    return "Hello from FastMCP Resources!"
+    return "Hello from MCP Resource!"
 
 
 # Resource returning JSON data (dict is auto-serialized)
@@ -24,7 +22,7 @@ def get_config() -> dict:
     return {
         "theme": "dark",
         "version": "1.2.0",
-        "features": ["tools", "resources"],
+        "features": ["tools", "inspect"],
     }
 
 
@@ -42,7 +40,7 @@ def get_application_status() -> dict:
         "status": "ok",
         "uptime": 12345,
         "version": "1.23",
-    }  # Example usage
+    }
 
 
 @mcp.resource("resource://system-status")
@@ -51,9 +49,8 @@ async def get_system_status(ctx: Context) -> dict:
     return {"status": "operational", "request_id": ctx.request_id}
 
 
-@mcp.resource(
-    uri="resource://{name}/details", name="NameDetails"
-)  # weird, is not listed... :-S
+# Dynamic resource with parameter, note that this kind of resource are not listed by client.list_resources()
+@mcp.resource(uri="resource://{name}/details", name="NameDetails")
 async def get_name_details(name: str, ctx: Context) -> dict:
     """Get details for a specific name."""
     return {"name": name, "accessed_at": ctx.request_id}

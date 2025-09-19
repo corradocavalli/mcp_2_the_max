@@ -1,3 +1,5 @@
+# Weather subserver
+
 from fastmcp import FastMCP
 
 weather_mcp = FastMCP(name="WeatherServer")

@@ -1,12 +1,10 @@
 import asyncio
-import os
 
 from fastmcp import Client
 from rich.console import Console
 
-os.system("clear")
-
 console = Console()
+console.clear()
 
 
 async def main():
@@ -19,7 +17,5 @@ async def main():
         result = await client.call_tool("get_user_info")
         console.print(result.content[0].text, style="bold blue")
 
-
-os.system("clear")
 
 asyncio.run(main())

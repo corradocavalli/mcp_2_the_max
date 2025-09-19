@@ -1,4 +1,3 @@
-import json
 import os
 
 from dotenv import load_dotenv
@@ -10,6 +9,7 @@ from fastmcp.server.dependencies import get_access_token
 load_dotenv()
 
 # The AzureProvider handles Azure's token format and validation
+# Ensure you have correctly set up an App Registration in Azure AD: https://gofastmcp.com/integrations/azure
 auth_provider = AzureProvider(
     client_id=os.getenv("AZURE_CLIENT_ID"),  # Your Azure App Client ID
     client_secret=os.getenv("AZURE_CLIENT_SECRET"),  # Your Azure App Client Secret

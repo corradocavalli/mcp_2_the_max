@@ -1,10 +1,8 @@
 # Prompts provide parameterized message templates for LLMs
 
 
-import json
-
 from fastmcp import FastMCP
-from fastmcp.prompts.prompt import Message, PromptMessage, TextContent
+from fastmcp.prompts.prompt import Message, PromptMessage, PromptResult, TextContent
 from pydantic import Field
 
 mcp = FastMCP(name="PromptServer")
@@ -31,20 +29,24 @@ def generate_code_request(language: str, task_description: str) -> PromptMessage
     tags={"analysis", "data"},  # Optional categorization tags
     meta={"version": "1.1", "author": "data-team"},  # Custom metadata
 )
-@mcp.prompt(
-    name="analyze_data_request",  # Custom prompt name
-    description="Creates a request to analyze data with specific parameters",  # Custom description
-    tags={"analysis", "data"},  # Optional categorization tags
-    meta={"version": "1.1", "author": "data-team"},  # Custom metadata
-)
 def data_analysis_prompt(
     data_uri: str = Field(description="The URI of the resource containing the data."),
     analysis_type: str = Field(default="summary", description="Type of analysis."),
 ) -> str:
-    """This docstring is ignored when description is provided."""
+    """NOTE: This docstring is ignored when description is provided in tool decorator."""
     return (
         f"Please perform a '{analysis_type}' analysis on the data found at {data_uri}."
     )
+
+
+# Multi-message prompt can also be defined
+@mcp.prompt
+def conversation_prompt(character: str, situation: str) -> PromptResult:
+    """Sets up a roleplaying scenario with initial messages."""
+    return [
+        Message(f"Let's roleplay. You are {character}. The situation is: {situation}"),
+        Message("Okay, I understand. I am ready. What happens next?", role="assistant"),
+    ]
 
 
 if __name__ == "__main__":

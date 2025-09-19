@@ -1,11 +1,10 @@
-# LLM sampling allows MCP tools to request the client’s LLM to generate text based on provided messages. This is useful when tools need to leverage the LLM’s capabilities to process data, generate responses, or perform text-based analysis.
-
 import asyncio
 
 from fastmcp import Context, FastMCP
 from pydantic import BaseModel, Field
 from typing_extensions import Annotated
 
+# Toggle to include/exclude the comprehensive stock info tool,
 STOCK_INFO = False
 
 mcp = FastMCP("TraderServer")

@@ -1,10 +1,13 @@
-# LLM sampling allows MCP tools to request the client’s LLM to generate text based on provided messages. This is useful when tools need to leverage the LLM’s capabilities to process data, generate responses, or perform text-based analysis.
+# LLM sampling allows MCP tools to request the client’s LLM to generate some text based on provided messages.
+# This is useful when tools need to leverage the LLM’s capabilities to process data, generate responses, or perform text-based analysis.
+# Since its just a request to the client, it can be also used for orchestration.
 
 from fastmcp import Context, FastMCP
 
 mcp = FastMCP("SamplingDemo")
 
 
+# A simple tool that uses sampling to generate a creative story about a given topic.
 @mcp.tool
 async def creative_writing(topic: str, ctx: Context) -> str:
     """Generate creative content using a specific model."""

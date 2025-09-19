@@ -9,7 +9,9 @@ from rich.console import Console
 from triage_server import ServerMessage
 
 load_dotenv()
-os.system("clear")
+
+console = Console()
+console.clear()
 
 
 async def sampling_handler(
@@ -64,17 +66,16 @@ async def elicitation_handler(message: str, response_type: type, params, context
 client = Client(os.getenv("TRIAGE_SERVER_URL"), sampling_handler=sampling_handler)
 trader = Client(os.getenv("TRADER_SERVER_URL"), elicitation_handler=elicitation_handler)
 
-console = Console()
-
 
 async def main():
     async with client:
 
         console.print("--" * 40, style="white")
-        console.print("Listing all available tools...", style="bold white")
+        console.print(
+            "Listing all available tools on TriageServer...", style="bold white"
+        )
         console.print("--" * 40, style="white")
 
-        # List all available tools on TriageServer
         all_tools = await client.list_tools()
 
         console.print(all_tools, style="bold green")
@@ -90,7 +91,5 @@ async def main():
         console.print(result.content[0].text, style="bold cyan")
         console.print("--" * 40, style="white")
 
-
-os.system("clear")
 
 asyncio.run(main())

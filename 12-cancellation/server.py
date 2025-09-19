@@ -13,6 +13,7 @@ def short_execution(topic: str, ctx: Context) -> str:
     return f"'{topic}' requested with request_id: {ctx.request_id}"
 
 
+# Long-running operation simulation with progress reporting and cancellation support
 @mcp.tool
 async def long_execution(count: int, ctx: Context) -> str:
     """Generates a user message asking for a long-running operation."""

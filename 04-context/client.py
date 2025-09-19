@@ -1,28 +1,18 @@
 import asyncio
-import os
 
-import httpx
 from fastmcp import Client
 from rich.console import Console
 
-os.system("clear")
-
-
-client = Client("http://localhost:8000/mcp")
-
 console = Console()
+console.clear()
 
 
-async def call_tool(name: str):
-    async with client:
+async def main():
+    async with Client("http://localhost:8000/mcp") as client:
 
-        all_tools = await client.list_tools()
-        console.print(all_tools, style="bold green")
-
+        # Call a tool that internally uses Context to read a resource returning the request ID
         result = await client.call_tool("system_health_check")
         console.print(result, style="bold blue")
 
 
-os.system("clear")
-
-asyncio.run(call_tool("Ford"))
+asyncio.run(main())
